@@ -11,6 +11,7 @@ def db_create():
     engine.connect()
     engine.execute("""
         CREATE TABLE IF NOT EXISTS iris(
+            id int NOT NULL,
             sepal_length FLOAT NOT NULL,
             sepal_width FLOAT NOT NULL,
             pepal_length FLOAT NOT NULL,
