@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
+import json
 
 app = Flask(__name__)
 
@@ -64,43 +65,31 @@ def showHello():
     return responseBody
 
 
+## 메인 로직!! 
+def cals(opt_operator, number01, number02):
+    if opt_operator == "addition":
+        return number01 + number02
+    elif opt_operator == "subtraction": 
+        return number01 - number02
+    elif opt_operator == "multiplication":
+        return number01 * number02
+    elif opt_operator == "division":
+        return number01 / number02
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 카카오톡 텍스트형 응답
-@app.route('/api/saysubway', methods=['POST'])
-def saysubway():
+## 카카오톡 Calculator 계산기 응답
+@app.route('/api/calCulator', methods=['POST'])
+def calCulator():
     body = request.get_json()
     print(body)
-    print(body['userRequest']['utterance'])
+    params_df = body['action']['params']
+    print(type(params_df))
+    opt_operator = params_df['operators']
+    number01 = json.loads(params_df['sys_number01'])['amount']
+    number02 = json.loads(params_df['sys_number02'])['amount']
 
-    url = 'C:/Users/h/Desktop/chatbot/'
-    driver = webdriver.Chrome(url + 'chromedriver.exe')
-    time.sleep(0.5)
-    driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
-    time.sleep(0.5)
+    print(opt_operator, type(opt_operator), number01, type(number01))
 
-    parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
-    subli=[]
-    # ul 태그 아래 있는 li 반복 뽑기
-    for i in parentElement:
-        i.click()
-        time.sleep(0.05)
-        a = i.text
-        subli.append(a)
-        i.click()
-
+    answer_text = str(cals(opt_operator, number01, number02))
 
     responseBody = {
         "version": "2.0",
@@ -108,11 +97,50 @@ def saysubway():
             "outputs": [
                 {
                     "simpleText": {
-                        "text": subli[0] + subli[1]
+                        "text": answer_text
                     }
                 }
             ]
         }
     }
-    driver.close()
+
     return responseBody
+
+# ## 카카오톡 텍스트형 응답
+# @app.route('/api/saysubway', methods=['POST'])
+# def saysubway():
+#     body = request.get_json()
+#     print(body)
+#     print(body['userRequest']['utterance'])
+
+#     url = 'C:/Users/h/Desktop/chatbot/'
+#     driver = webdriver.Chrome(url + 'chromedriver.exe')
+#     time.sleep(0.5)
+#     driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
+#     time.sleep(0.5)
+
+#     parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
+#     subli=[]
+#     # ul 태그 아래 있는 li 반복 뽑기
+#     for i in parentElement:
+#         i.click()
+#         time.sleep(0.05)
+#         a = i.text
+#         subli.append(a)
+#         i.click()
+
+
+#     responseBody = {
+#         "version": "2.0",
+#         "template": {
+#             "outputs": [
+#                 {
+#                     "simpleText": {
+#                         "text": subli[0] + subli[1]
+#                     }
+#                 }
+#             ]
+#         }
+#     }
+#     driver.close()
+#     return responseBody
