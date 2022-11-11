@@ -8,12 +8,6 @@ import time
 import json
 import os
 
-chrome_options = webdriver.ChromeOptions()
-chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-chrome_options.add_argument("--headless") # 창을 띄우지 않음
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--no-sandbox") # 샌드박스 보안 비활성화
-driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
 app = Flask(__name__)
 
@@ -120,7 +114,14 @@ def saysubway():
     print(body)
     print(body['userRequest']['utterance'])
 
+
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+
     chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     time.sleep(0.5)
     driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
