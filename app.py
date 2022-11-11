@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, request
-# from selenium import webdriver
-# from selenium.webdriver.common.keys import Keys
-# from selenium.webdriver.common.by import By
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 import time
 import json
+import os
+
+chrome_options = webdriver.ChromeOptions()
+chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+chrome_options.add_argument("--headless") # 창을 띄우지 않음
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--no-sandbox") # 샌드박스 보안 비활성화
+driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
 app = Flask(__name__)
 
@@ -103,4 +111,43 @@ def calCulator():
         }
     }
 
+    return responseBody
+
+## 크롤링
+@app.route('/api/saysubway', methods=['POST'])
+def saysubway():
+    body = request.get_json()
+    print(body)
+    print(body['userRequest']['utterance'])
+
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+    time.sleep(0.5)
+    driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
+    time.sleep(0.5)
+
+    parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
+    subli=[]
+    # ul 태그 아래 있는 li 반복 뽑기
+    for i in parentElement:
+        i.click()
+        time.sleep(0.05)
+        a = i.text
+        subli.append(a)
+        i.click()
+
+
+    responseBody = {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "simpleText": {
+                        "text": subli[0] + subli[1]
+                    }
+                }
+            ]
+        }
+    }
+    driver.close()
     return responseBody
