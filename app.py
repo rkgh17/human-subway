@@ -1,36 +1,60 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask
-import pandas as pd 
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
-
-## DB 연결 Local
-def db_create():
-	# Heroku
-    engine = create_engine("postgres://tbbkrrtsyawpna:dfdb5f863367f9201af65c0e118c7be707d839509e9e60439d6b942ac32b826c@ec2-18-215-41-121.compute-1.amazonaws.com:5432/d8ijkeso1uk8kf", echo = False)
-
-    engine.connect()
-    engine.execute("""
-        CREATE TABLE IF NOT EXISTS iris(
-            id INTEGER NOT NULL,
-            sepal_length FLOAT NOT NULL,
-            sepal_width FLOAT NOT NULL,
-            pepal_length FLOAT NOT NULL,
-            pepal_width FLOAT NOT NULL,
-            species VARCHAR(100) NOT NULL
-        );"""
-    )
-    data = pd.read_csv('data/iris.csv')
-    print(data)
-    data.to_sql(name='iris', con=engine, schema = 'public', if_exists='replace', index=False)
+from flask import Flask, request
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    # db_create()
-    return "DB Created Done!!!"
+    return "Hello World!"
 
-if __name__ == "__main__":
-    db_create()
-    app.run()
+
+# 1단계 : 코드 수정
+# 2단계 : 스킬 등록 (URI)
+# 3단계 : 시나리오에서 등록한 스킬 호출
+# 4단계 : 배포
+
+## 카카오톡 텍스트형 응답
+@app.route('/api/sayHello', methods=['POST'])
+def sayHello():
+    body = request.get_json()
+    print(body)
+    print(body['userRequest']['utterance'])
+
+    responseBody = {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "simpleText": {
+                        "text": "안녕 hello I'm Ryan"
+                    }
+                }
+            ]
+        }
+    }
+
+    return responseBody
+
+## 카카오톡 이미지형 응답
+@app.route('/api/showHello', methods=['POST'])
+def showHello():
+    body = request.get_json()
+    print(body)
+    print(body['userRequest']['utterance'])
+
+    responseBody = {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "simpleImage": {
+                        "imageUrl": "https://t1.daumcdn.net/friends/prod/category/M001_friends_ryan2.jpg",
+                        "altText": "hello I'm Ryan"
+                    }
+                }
+            ]
+        }
+    }
+
+    return responseBody
