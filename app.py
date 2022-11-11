@@ -24,13 +24,13 @@ def db_create():
     print(data)
     data.to_sql(name='iris', con=engine, schema = 'public', if_exists='replace', index=False)
 
-app  = Flask(__name__)
+app = Flask(__name__)
 
-@app .route("/")
+@app.route("/")
 def index():
     # db_create()
     return "DB Created Done!!!"
 
 if __name__ == "__main__":
     db_create()
-    app .run()
+    app.run()
