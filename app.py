@@ -20,6 +20,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
+    db_create()
     return "DB Created Done!!!"
 
 if __name__ == "__main__":
