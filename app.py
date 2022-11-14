@@ -8,24 +8,13 @@ import time
 import json
 import os
 
+## 크롤링 환경변수 설정
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-gpu")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-
-driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
-parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
-subli=[]
-# ul 태그 아래 있는 li 반복 뽑기
-for i in parentElement:
-    i.click()
-    time.sleep(0.05)
-    a = i.text
-    subli.append(a)
-    i.click()
 
 app = Flask(__name__)
 
@@ -133,13 +122,42 @@ def saysubway():
     print(body)
     print(body['userRequest']['utterance'])
 
+    # 안전누리 사이트 열기
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+    driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
+
+    # 우리가 원하는 정보 변수 설정
+    parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
+
+    # 지하철 속보를 담을 리스트
+    subli=[]
+
+    # 지하철 속보 클릭해서 모두 크롤링해서 subli 리스트에 넣기 (ul 태그 아래 있는 li 반복 뽑기)
+    for i in parentElement:
+        i.click()
+        time.sleep(0.05)
+        a = i.text
+        subli.append(a)
+        i.click()
+
+    # 카톡으로 보내줄 문자열
+    substr=""
+
+    # 리스트별로 더해주기
+    for item in subli:
+        if len(subli)==1:
+            sbstr = sbstr + item
+        else:
+            sbstr = sbstr + item + "\n"
+    driver.close()
+
     responseBody = {
         "version": "2.0",
         "template": {
             "outputs": [
                 {
                     "simpleText": {
-                        "text": subli[0]
+                        "text": substr
                     }
                 }
             ]
