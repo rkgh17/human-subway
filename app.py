@@ -76,64 +76,64 @@ def saysubway():
 
 
 
-## DB 연결 Local
-def db_create():
-    # 로컬
-	# engine = create_engine("postgresql://postgres:1234@localhost:5432/chatbot", echo = False)
+# ## DB 연결 Local
+# def db_create():
+#     # 로컬
+# 	# engine = create_engine("postgresql://postgres:1234@localhost:5432/chatbot", echo = False)
 		
-	# Heroku
-    engine = create_engine("postgresql://avcdjxublgzxpt:208785dbb0dc2ae32038697ee3e56d141f070143b047110ac8886962cd59f969@ec2-52-1-17-228.compute-1.amazonaws.com:5432/d8i34lbtd4iht5", echo = False)
+# 	# Heroku
+#     engine = create_engine("postgresql://avcdjxublgzxpt:208785dbb0dc2ae32038697ee3e56d141f070143b047110ac8886962cd59f969@ec2-52-1-17-228.compute-1.amazonaws.com:5432/d8i34lbtd4iht5", echo = False)
 
-    engine.connect()
-    engine.execute("""
-        CREATE TABLE IF NOT EXISTS iris(
-            sepal_length FLOAT NOT NULL,
-            sepal_width FLOAT NOT NULL,
-            pepal_length FLOAT NOT NULL,
-            pepal_width FLOAT NOT NULL,
-            species VARCHAR(100) NOT NULL
-        );"""
-    )
-    data = pd.read_csv('data/iris.csv')
-    print(data)
-    data.to_sql(name='iris', con=engine, schema = 'public', if_exists='replace', index=False)
+#     engine.connect()
+#     engine.execute("""
+#         CREATE TABLE IF NOT EXISTS iris(
+#             sepal_length FLOAT NOT NULL,
+#             sepal_width FLOAT NOT NULL,
+#             pepal_length FLOAT NOT NULL,
+#             pepal_width FLOAT NOT NULL,
+#             species VARCHAR(100) NOT NULL
+#         );"""
+#     )
+#     data = pd.read_csv('data/iris.csv')
+#     print(data)
+#     data.to_sql(name='iris', con=engine, schema = 'public', if_exists='replace', index=False)
 
 
-## Query 조회
-@app.route('/api/querySQL', methods=['POST'])
-def querySQL():
+# ## Query 조회
+# @app.route('/api/querySQL', methods=['POST'])
+# def querySQL():
     
-    body = request.get_json()
-    params_df = body['action']['params']
-    sepal_length_num = str(json.loads(params_df['sepal_length_num'])['amount'])
+#     body = request.get_json()
+#     params_df = body['action']['params']
+#     sepal_length_num = str(json.loads(params_df['sepal_length_num'])['amount'])
 
-    print(sepal_length_num, type(sepal_length_num))
-    query_str = f'''
-        SELECT sepal_length, species FROM iris where sepal_length >= {sepal_length_num}
-    '''
+#     print(sepal_length_num, type(sepal_length_num))
+#     query_str = f'''
+#         SELECT sepal_length, species FROM iris where sepal_length >= {sepal_length_num}
+#     '''
 
-    engine = create_engine("postgresql://avcdjxublgzxpt:208785dbb0dc2ae32038697ee3e56d141f070143b047110ac8886962cd59f969@ec2-52-1-17-228.compute-1.amazonaws.com:5432/d8i34lbtd4iht5", echo = False)
+#     engine = create_engine("postgresql://avcdjxublgzxpt:208785dbb0dc2ae32038697ee3e56d141f070143b047110ac8886962cd59f969@ec2-52-1-17-228.compute-1.amazonaws.com:5432/d8i34lbtd4iht5", echo = False)
 
-    with engine.connect() as conn:
-        query = conn.execute(text(query_str))
+#     with engine.connect() as conn:
+#         query = conn.execute(text(query_str))
 
-    df = pd.DataFrame(query.fetchall())
-    nrow_num = str(len(df.index))
-    answer_text = nrow_num
+#     df = pd.DataFrame(query.fetchall())
+#     nrow_num = str(len(df.index))
+#     answer_text = nrow_num
 
-    responseBody = {
-        "version": "2.0",
-        "template": {
-            "outputs": [
-                {
-                    "simpleText": {
-                        "text": answer_text + "개 입니다."
-                    }
-                }
-            ]
-        }
-    }
-    return responseBody
+#     responseBody = {
+#         "version": "2.0",
+#         "template": {
+#             "outputs": [
+#                 {
+#                     "simpleText": {
+#                         "text": answer_text + "개 입니다."
+#                     }
+#                 }
+#             ]
+#         }
+#     }
+#     return responseBody
 
 
 
