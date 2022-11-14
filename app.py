@@ -11,36 +11,36 @@ import time
 import json
 import os
 
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument('--disable-dev-shm-usage')
-chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+# chrome_options = webdriver.ChromeOptions()
+# chrome_options.add_argument("--headless")
+# chrome_options.add_argument("--disable-gpu")
+# chrome_options.add_argument("--no-sandbox")
+# chrome_options.add_argument('--disable-dev-shm-usage')
+# chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 
-# 크롤링할 창 열기
-driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
+# # 크롤링할 창 열기
+# driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+# driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
 
-# 크롤링 변수설정
-parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
+# # 크롤링 변수설정
+# parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
 
-# 사고 정보 리스트
-subli=[]
+# # 사고 정보 리스트
+# subli=[]
 
-# 사고 정보 리스트에 크롤링해서 정보 넣기 (ul 태그 아래 있는 li 반복 뽑기)
-for i in parentElement:
-    i.click()
-    time.sleep(0.05)
-    a = i.text
-    subli.append(a)
-    i.click()
+# # 사고 정보 리스트에 크롤링해서 정보 넣기 (ul 태그 아래 있는 li 반복 뽑기)
+# for i in parentElement:
+#     i.click()
+#     time.sleep(0.05)
+#     a = i.text
+#     subli.append(a)
+#     i.click()
 
-# 카톡으로 보내줄 문자열
-sbstr=""
+# # 카톡으로 보내줄 문자열
+# sbstr=""
 
-for item in subli:
-    sbstr = sbstr + item + "\n"
+# for item in subli:
+#     sbstr = sbstr + item + "\n"
 
 
 
@@ -52,26 +52,26 @@ def index():
     return "DB Created Done !!!!!!!!!!!!!!!"
 
 
-## 크롤링
-@app.route('/api/saysubway', methods=['POST'])
-def saysubway():
-    body = request.get_json()
-    print(body)
-    print(body['userRequest']['utterance'])
+# ## 크롤링
+# @app.route('/api/saysubway', methods=['POST'])
+# def saysubway():
+#     body = request.get_json()
+#     print(body)
+#     print(body['userRequest']['utterance'])
 
-    responseBody = {
-        "version": "2.0",
-        "template": {
-            "outputs": [
-                {
-                    "simpleText": {
-                        "text": sbstr
-                    }
-                }
-            ]
-        }
-    }
-    return responseBody
+#     responseBody = {
+#         "version": "2.0",
+#         "template": {
+#             "outputs": [
+#                 {
+#                     "simpleText": {
+#                         "text": sbstr
+#                     }
+#                 }
+#             ]
+#         }
+#     }
+#     return responseBody
 
 
 
