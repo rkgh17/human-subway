@@ -122,7 +122,6 @@ def calCulator():
 #     print(body)
 #     print(body['userRequest']['utterance'])
 
-
 #     driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
 #     time.sleep(0.5)
 
