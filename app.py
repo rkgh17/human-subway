@@ -115,36 +115,37 @@ def calCulator():
     return responseBody
 
 
-## 크롤링
-@app.route('/api/saysubway', methods=['POST'])
-def saysubway():
-    body = request.get_json()
-    print(body)
-    print(body['userRequest']['utterance'])
+# ## 크롤링
+# @app.route('/api/saysubway', methods=['POST'])
+# def saysubway():
+#     body = request.get_json()
+#     print(body)
+#     print(body['userRequest']['utterance'])
 
-    driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
-    time.sleep(0.5)
 
-    parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
-    subli=[]
-    # ul 태그 아래 있는 li 반복 뽑기
-    for i in parentElement:
-        i.click()
-        time.sleep(0.05)
-        a = i.text
-        subli.append(a)
-        i.click()
+#     driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
+#     time.sleep(0.5)
 
-    responseBody = {
-        "version": "2.0",
-        "template": {
-            "outputs": [
-                {
-                    "simpleText": {
-                        "text": subli[0]
-                    }
-                }
-            ]
-        }
-    }
-    return responseBody
+#     parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
+#     subli=[]
+#     # ul 태그 아래 있는 li 반복 뽑기
+#     for i in parentElement:
+#         i.click()
+#         time.sleep(0.05)
+#         a = i.text
+#         subli.append(a)
+#         i.click()
+
+#     responseBody = {
+#         "version": "2.0",
+#         "template": {
+#             "outputs": [
+#                 {
+#                     "simpleText": {
+#                         "text": subli[0]
+#                     }
+#                 }
+#             ]
+#         }
+#     }
+#     return responseBody
