@@ -149,6 +149,8 @@ def saysubway():
             sbstr = sbstr + item
         else:
             sbstr = sbstr + item + "\n"
+
+    # 드라이버 종료
     driver.close()
 
     responseBody = {
