@@ -14,9 +14,8 @@ chrome_options.add_argument("--disable-gpu")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
-time.sleep(0.5)
 
+driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
 parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
 subli=[]
 # ul 태그 아래 있는 li 반복 뽑기
