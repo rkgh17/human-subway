@@ -4,6 +4,9 @@ from flask import Flask, request
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
+from sqlalchemy.sql import text 
+import pandas as pd 
 import time
 import json
 import os
@@ -39,11 +42,100 @@ sbstr=""
 for item in subli:
     sbstr = sbstr + item + "\n"
 
+
+
+
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "Hello World!"
+    db_create()
+    return "DB Created Done !!!!!!!!!!!!!!!"
+
+
+## 크롤링
+@app.route('/api/saysubway', methods=['POST'])
+def saysubway():
+    body = request.get_json()
+    print(body)
+    print(body['userRequest']['utterance'])
+
+    responseBody = {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "simpleText": {
+                        "text": sbstr
+                    }
+                }
+            ]
+        }
+    }
+    return responseBody
+
+
+
+## DB 연결 Local
+def db_create():
+    # 로컬
+	# engine = create_engine("postgresql://postgres:1234@localhost:5432/chatbot", echo = False)
+		
+	# Heroku
+    engine = create_engine("postgres://tbbkrrtsyawpna:dfdb5f863367f9201af65c0e118c7be707d839509e9e60439d6b942ac32b826c@ec2-18-215-41-121.compute-1.amazonaws.com:5432/d8ijkeso1uk8kf", echo = False)
+
+    engine.connect()
+    engine.execute("""
+        CREATE TABLE IF NOT EXISTS iris(
+            sepal_length FLOAT NOT NULL,
+            sepal_width FLOAT NOT NULL,
+            pepal_length FLOAT NOT NULL,
+            pepal_width FLOAT NOT NULL,
+            species VARCHAR(100) NOT NULL
+        );"""
+    )
+    data = pd.read_csv('data/iris.csv')
+    print(data)
+    data.to_sql(name='iris', con=engine, schema = 'public', if_exists='replace', index=False)
+
+
+## Query 조회
+@app.route('/api/querySQL', methods=['POST'])
+def querySQL():
+    
+    body = request.get_json()
+    params_df = body['action']['params']
+    sepal_length_num = str(json.loads(params_df['sepal_length_num'])['amount'])
+
+    print(sepal_length_num, type(sepal_length_num))
+    query_str = f'''
+        SELECT sepal_length, species FROM iris where sepal_length >= {sepal_length_num}
+    '''
+
+    engine = create_engine("postgres://tbbkrrtsyawpna:dfdb5f863367f9201af65c0e118c7be707d839509e9e60439d6b942ac32b826c@ec2-18-215-41-121.compute-1.amazonaws.com:5432/d8ijkeso1uk8kf", echo = False)
+
+    with engine.connect() as conn:
+        query = conn.execute(text(query_str))
+
+    df = pd.DataFrame(query.fetchall())
+    nrow_num = str(len(df.index))
+    answer_text = nrow_num
+
+    responseBody = {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "simpleText": {
+                        "text": answer_text + "개 입니다."
+                    }
+                }
+            ]
+        }
+    }
+    return responseBody
+
+
 
 
 # 1단계 : 코드 수정
@@ -138,23 +230,15 @@ def calCulator():
     return responseBody
 
 
-## 크롤링
-@app.route('/api/saysubway', methods=['POST'])
-def saysubway():
-    body = request.get_json()
-    print(body)
-    print(body['userRequest']['utterance'])
 
-    responseBody = {
-        "version": "2.0",
-        "template": {
-            "outputs": [
-                {
-                    "simpleText": {
-                        "text": sbstr
-                    }
-                }
-            ]
-        }
-    }
-    return responseBody
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    db_create()
+    app.run()
