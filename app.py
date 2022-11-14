@@ -140,15 +140,15 @@ def saysubway():
         subli.append(a)
         i.click()
 
-    # 카톡으로 보내줄 문자열
-    substr=""
+    # # 카톡으로 보내줄 문자열
+    # substr=""
 
-    # 리스트별로 더해주기
-    for item in subli:
-        if len(subli)==1:
-            sbstr = sbstr + item
-        else:
-            sbstr = sbstr + item + "\n"
+    # # 리스트별로 더해주기
+    # for item in subli:
+    #     if len(subli)==1:
+    #         sbstr = sbstr + item
+    #     else:
+    #         sbstr = sbstr + item + "\n"
 
     # 드라이버 종료
     driver.close()
@@ -159,7 +159,7 @@ def saysubway():
             "outputs": [
                 {
                     "simpleText": {
-                        "text": substr
+                        "text": subli[0]
                     }
                 }
             ]
