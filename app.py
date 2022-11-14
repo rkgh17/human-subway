@@ -7,40 +7,41 @@ from selenium.webdriver.common.by import By
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
 from sqlalchemy.sql import text 
 import pandas as pd 
+import psycopg2
 import time
 import json
 import os
 
-# chrome_options = webdriver.ChromeOptions()
-# chrome_options.add_argument("--headless")
-# chrome_options.add_argument("--disable-gpu")
-# chrome_options.add_argument("--no-sandbox")
-# chrome_options.add_argument('--disable-dev-shm-usage')
-# chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument('--disable-dev-shm-usage')
+chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 
-# # 크롤링할 창 열기
-# driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-# driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
+# 크롤링할 창 열기
+driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
 
-# # 크롤링 변수설정
-# parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
+# 크롤링 변수설정
+parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
 
-# # 사고 정보 리스트
-# subli=[]
+# 사고 정보 리스트
+subli=[]
 
-# # 사고 정보 리스트에 크롤링해서 정보 넣기 (ul 태그 아래 있는 li 반복 뽑기)
-# for i in parentElement:
-#     i.click()
-#     time.sleep(0.05)
-#     a = i.text
-#     subli.append(a)
-#     i.click()
+# 사고 정보 리스트에 크롤링해서 정보 넣기 (ul 태그 아래 있는 li 반복 뽑기)
+for i in parentElement:
+    i.click()
+    time.sleep(0.05)
+    a = i.text
+    subli.append(a)
+    i.click()
 
-# # 카톡으로 보내줄 문자열
-# sbstr=""
+# 카톡으로 보내줄 문자열
+sbstr=""
 
-# for item in subli:
-#     sbstr = sbstr + item + "\n"
+for item in subli:
+    sbstr = sbstr + item + "\n"
 
 
 
@@ -52,74 +53,12 @@ def index():
     return "DB Created Done !!!!!!!!!!!!!!!"
 
 
-# ## 크롤링
-# @app.route('/api/saysubway', methods=['POST'])
-# def saysubway():
-#     body = request.get_json()
-#     print(body)
-#     print(body['userRequest']['utterance'])
-
-#     responseBody = {
-#         "version": "2.0",
-#         "template": {
-#             "outputs": [
-#                 {
-#                     "simpleText": {
-#                         "text": sbstr
-#                     }
-#                 }
-#             ]
-#         }
-#     }
-#     return responseBody
-
-
-
-## DB 연결 Local
-def db_create():
-    # 로컬
-	# engine = create_engine("postgresql://postgres:1234@localhost:5432/chatbot", echo = False)
-		
-	# Heroku
-    engine = create_engine("postgresql://avcdjxublgzxpt:208785dbb0dc2ae32038697ee3e56d141f070143b047110ac8886962cd59f969@ec2-52-1-17-228.compute-1.amazonaws.com:5432/d8i34lbtd4iht5", echo = False)
-
-    engine.connect()
-    engine.execute("""
-        CREATE TABLE IF NOT EXISTS iris(
-            sepal_length FLOAT NOT NULL,
-            sepal_width FLOAT NOT NULL,
-            pepal_length FLOAT NOT NULL,
-            pepal_width FLOAT NOT NULL,
-            species VARCHAR(100) NOT NULL
-        );"""
-    )
-    data = pd.read_csv("data/Iris.csv")
-    
-    print(data)
-    data.to_sql(name='iris', con=engine, schema = 'public', if_exists='replace', index=False)
-
-
-## Query 조회
-@app.route('/api/querySQL', methods=['POST'])
-def querySQL():
-    
+## 크롤링
+@app.route('/api/saysubway', methods=['POST'])
+def saysubway():
     body = request.get_json()
-    params_df = body['action']['params']
-    sepal_length_num = str(json.loads(params_df['sepal_length_num'])['amount'])
-
-    print(sepal_length_num, type(sepal_length_num))
-    query_str = f'''
-        SELECT sepal_length, species FROM iris where sepal_length >= {sepal_length_num}
-    '''
-
-    engine = create_engine("postgresql://avcdjxublgzxpt:208785dbb0dc2ae32038697ee3e56d141f070143b047110ac8886962cd59f969@ec2-52-1-17-228.compute-1.amazonaws.com:5432/d8i34lbtd4iht5", echo = False)
-
-    with engine.connect() as conn:
-        query = conn.execute(text(query_str))
-
-    df = pd.DataFrame(query.fetchall())
-    nrow_num = str(len(df.index))
-    answer_text = nrow_num
+    print(body)
+    print(body['userRequest']['utterance'])
 
     responseBody = {
         "version": "2.0",
@@ -127,7 +66,7 @@ def querySQL():
             "outputs": [
                 {
                     "simpleText": {
-                        "text": answer_text + "개 입니다."
+                        "text": sbstr
                     }
                 }
             ]
@@ -136,6 +75,30 @@ def querySQL():
     return responseBody
 
 
+
+## DB 연결 Local
+def db_create():
+    # 로컬
+	# engine = create_engine("postgresql://postgres:1234@localhost:5432/chatbot", echo = False)
+		
+	# # Heroku
+    # engine = create_engine("postgresql://avcdjxublgzxpt:208785dbb0dc2ae32038697ee3e56d141f070143b047110ac8886962cd59f969@ec2-52-1-17-228.compute-1.amazonaws.com:5432/d8i34lbtd4iht5", echo = False)
+
+    # engine.connect()
+
+    # postgre db 연결 - 개인설정 참고
+    conn = psycopg2.connect(host="ec2-52-1-17-228.compute-1.amazonaws.com", 
+                            dbname="d8i34lbtd4iht5", 
+                            user="avcdjxublgzxpt", 
+                            password="208785dbb0dc2ae32038697ee3e56d141f070143b047110ac8886962cd59f969", 
+                            port="5432")
+    
+    # 데이터 조작 인스턴스 생성
+    cur = conn.cursor()
+
+    # 테이블 생성(create)
+    cur.execute("CREATE TABLE IF NOT EXISTS subdata(subacc VARCHAR(20) NOT NULL, acctime VARCHAR(30) NOT NULL, content VARCHAR(300) NOT NULL);")
+    conn.commit()
 
 
 # 1단계 : 코드 수정
