@@ -146,7 +146,7 @@ def saysubway():
             "outputs": [
                 {
                     "simpleText": {
-                        "text": subli[0] + "\n"+ subli[1]
+                        "text": subli[0]
                     }
                 }
             ]
