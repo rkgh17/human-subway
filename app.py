@@ -82,7 +82,7 @@ def db_create():
 	# engine = create_engine("postgresql://postgres:1234@localhost:5432/chatbot", echo = False)
 		
 	# Heroku
-    engine = create_engine("postgres://tbbkrrtsyawpna:dfdb5f863367f9201af65c0e118c7be707d839509e9e60439d6b942ac32b826c@ec2-18-215-41-121.compute-1.amazonaws.com:5432/d8ijkeso1uk8kf", echo = False)
+    engine = create_engine("postgresql://avcdjxublgzxpt:208785dbb0dc2ae32038697ee3e56d141f070143b047110ac8886962cd59f969@ec2-52-1-17-228.compute-1.amazonaws.com:5432/d8i34lbtd4iht5", echo = False)
 
     engine.connect()
     engine.execute("""
@@ -112,7 +112,7 @@ def querySQL():
         SELECT sepal_length, species FROM iris where sepal_length >= {sepal_length_num}
     '''
 
-    engine = create_engine("postgres://tbbkrrtsyawpna:dfdb5f863367f9201af65c0e118c7be707d839509e9e60439d6b942ac32b826c@ec2-18-215-41-121.compute-1.amazonaws.com:5432/d8ijkeso1uk8kf", echo = False)
+    engine = create_engine("postgresql://avcdjxublgzxpt:208785dbb0dc2ae32038697ee3e56d141f070143b047110ac8886962cd59f969@ec2-52-1-17-228.compute-1.amazonaws.com:5432/d8i34lbtd4iht5", echo = False)
 
     with engine.connect() as conn:
         query = conn.execute(text(query_str))
