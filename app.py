@@ -1,49 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, request
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
-from sqlalchemy.sql import text 
-import pandas as pd 
+from datetime import date
 import psycopg2
-import time
 import json
-import os
-
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument('--disable-dev-shm-usage')
-chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-
-# 크롤링할 창 열기
-driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-driver.get("https://safecity.seoul.go.kr/acdnt/sbwyIndex.do")
-
-# 크롤링 변수설정
-parentElement = driver.find_elements(By.XPATH, '//*[@id="dv_as_timeline"]/li')
-
-# 사고 정보 리스트
-subli=[]
-
-# 사고 정보 리스트에 크롤링해서 정보 넣기 (ul 태그 아래 있는 li 반복 뽑기)
-for i in parentElement:
-    i.click()
-    time.sleep(0.05)
-    a = i.text
-    subli.append(a)
-    i.click()
-
-# 카톡으로 보내줄 문자열
-sbstr=""
-
-for item in subli:
-    sbstr = sbstr + item + "\n"
-
-
 
 app = Flask(__name__)
 
@@ -51,13 +11,34 @@ app = Flask(__name__)
 def index():
     return "hello"
 
-
 ## 오늘의 사고내역 보내주기
 @app.route('/api/saysubway', methods=['POST'])
 def saysubway():
     body = request.get_json()
     print(body)
     print(body['userRequest']['utterance'])
+
+    # db연결
+    conn = psycopg2.connect(host="ec2-23-21-207-93.compute-1.amazonaws.com", 
+                            dbname="d3oubpekvnbupv", 
+                            user="grxhirqndvyqvv", 
+                            password="6f1afaafe16d245c70666bdb8c831aa876e62b380a1544f5dc832c51f27cece6", 
+                            port="5432")
+
+    # 데이터 조작 인스턴스 생성
+    cur = conn.cursor()
+
+    # db select 오늘날짜의 지하철 이슈 찾아보기
+    today = date.today().isoformat() + '%'
+
+    # 조회해서 리스트(안에는 튜플)에 담기
+    cur.execute(f"SELECT * FROM subdata2 WHERE acctime LIKE '{today}' ")
+    result_all = cur.fetchall()
+
+    sbstr=""
+    for i in result_all:
+        for j in i:
+            sbstr = sbstr + j + "\n"
 
     responseBody = {
         "version": "2.0",
