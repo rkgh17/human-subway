@@ -55,42 +55,42 @@ def saysubway():
     }
     return responseBody
 
-# # 경로 url 전달 함수
-# def location(searching):
-#     url = 'https://dapi.kakao.com/v2/local/search/keyword.json?query={}'.format(searching)
-#     headers = {
-#         "Authorization": "KakaoAK bbc0593ca1fbd88db71ccfdd5421ef1e"
-#     }
-#     destination = 'https://map.kakao.com/link/to/' + (requests.get(url, headers = headers).json()['documents'])[0].get('id')
+# 경로 url 전달 함수
+def location(searching):
+    url = 'https://dapi.kakao.com/v2/local/search/keyword.json?query={}'.format(searching)
+    headers = {
+        "Authorization": "KakaoAK bbc0593ca1fbd88db71ccfdd5421ef1e"
+    }
+    destination = 'https://map.kakao.com/link/to/' + (requests.get(url, headers = headers).json()['documents'])[0].get('id')
     
-#     return destination
+    return destination
 
-# # 경로찾기 응답
-# @app.route('/api/goto', methods=['POST'])
-# def goto():
-#     body = request.get_json()
-#     print(body)
-#     params_df = body['action']['params']
-#     print(type(params_df))
-#     goal = json.loads(params_df['sys_location'])['amount']
-#     print(goal, type(goal))
+# 경로찾기 응답
+@app.route('/api/goto', methods=['POST'])
+def goto():
+    body = request.get_json()
+    print(body)
+    params_df = body['action']['params']
+    print(type(params_df))
+    goal = json.loads(params_df['sys_location'])['amount']
+    print(goal, type(goal))
 
-#     answer_text = str(location(goal))
+    answer_text = str(location(goal))
 
-#     responseBody = {
-#         "version": "2.0",
-#         "template": {
-#             "outputs": [
-#                 {
-#                     "simpleText": {
-#                         "text": answer_text
-#                     }
-#                 }
-#             ]
-#         }
-#     }
+    responseBody = {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "simpleText": {
+                        "text": answer_text
+                    }
+                }
+            ]
+        }
+    }
 
-#     return responseBody
+    return responseBody
 
 
 # 1단계 : 코드 수정
