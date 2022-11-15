@@ -52,7 +52,7 @@ def index():
     return "hello"
 
 
-## 크롤링
+## 오늘의 사고내역 보내주기
 @app.route('/api/saysubway', methods=['POST'])
 def saysubway():
     body = request.get_json()
@@ -72,32 +72,6 @@ def saysubway():
         }
     }
     return responseBody
-
-
-
-# ## DB 연결 Local
-# def db_create():
-#     # 로컬
-# 	# engine = create_engine("postgresql://postgres:1234@localhost:5432/chatbot", echo = False)
-		
-# 	# # Heroku
-#     # engine = create_engine("postgresql://avcdjxublgzxpt:208785dbb0dc2ae32038697ee3e56d141f070143b047110ac8886962cd59f969@ec2-52-1-17-228.compute-1.amazonaws.com:5432/d8i34lbtd4iht5", echo = False)
-
-#     # engine.connect()
-
-#     # postgre db 연결 - 개인설정 참고
-#     conn = psycopg2.connect(host="ec2-52-1-17-228.compute-1.amazonaws.com", 
-#                             dbname="d8i34lbtd4iht5", 
-#                             user="avcdjxublgzxpt", 
-#                             password="208785dbb0dc2ae32038697ee3e56d141f070143b047110ac8886962cd59f969", 
-#                             port="5432")
-    
-#     # 데이터 조작 인스턴스 생성
-#     cur = conn.cursor()
-
-#     # 테이블 생성(create)
-#     cur.execute("CREATE TABLE IF NOT EXISTS subdata(subacc VARCHAR(20) NOT NULL, acctime VARCHAR(30) NOT NULL, content VARCHAR(300) NOT NULL);")
-#     conn.commit()
 
 
 # 1단계 : 코드 수정
@@ -190,14 +164,6 @@ def calCulator():
     }
 
     return responseBody
-
-
-
-
-
-
-
-
 
 
 
