@@ -31,6 +31,5 @@ postgreDB 연결
 TODO : DB-챗봇 연결
 
 sample
-<br/>
 
-[sample](project/image/sample.jpg)
+![sample](/project/image/sample.jpg)
