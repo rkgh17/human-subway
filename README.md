@@ -21,7 +21,7 @@ heroku 서버설정
 API & 크롤링 코드작업
 
 sample
-![sample](/project/image/sample.jpg)
+<img src="/project/image/sample.jpg" width="200", height="200">
 
 ---
 
