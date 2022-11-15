@@ -31,4 +31,5 @@ postgreDB 연결
 TODO : DB-챗봇 연결
 
 sample
-<img src="/project/image/sample.jpg" width="200", height="200">
+
+![sample](/project/image/sample.jpg){: width="200", height="200"}
