@@ -2,7 +2,7 @@
 
 from flask import Flask, request
 from datetime import date
-# import requests
+import requests
 import psycopg2
 import json
 
@@ -66,8 +66,8 @@ def saysubway():
 #     return destination
 
 # # 경로찾기 응답
-# @app.route('/api/desti', methods=['POST'])
-# def desti():
+# @app.route('/api/goto', methods=['POST'])
+# def goto():
 #     body = request.get_json()
 #     print(body)
 #     params_df = body['action']['params']
