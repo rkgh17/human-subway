@@ -16,12 +16,7 @@ heroku 서버설정
 
 ### 22.11.12 ~ 11.13
 
-카카오톡 챗봇 세팅
-
 API & 크롤링 코드작업
-
-sample
-<img src="/project/image/sample.jpg" width="200", height="200">
 
 ---
 
@@ -34,3 +29,6 @@ postgreDB 연결
 ### 22.11.15 ~ 
 
 TODO : DB-챗봇 연결
+
+sample
+<img src="/project/image/sample.jpg" width="200", height="200">
