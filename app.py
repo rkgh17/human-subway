@@ -72,7 +72,7 @@ def goto():
     print(body)
     params_df = body['action']['params']
     print(type(params_df))
-    goal = json.loads(params_df['sys_location'])['amount']
+    goal = json.loads(params_df['sys_location'])
     print(goal, type(goal))
 
     answer_text = str(location(goal))
