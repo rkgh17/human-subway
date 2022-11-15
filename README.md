@@ -32,4 +32,5 @@ TODO : DB-챗봇 연결
 
 sample
 
-![sample](/project/image/sample.jpg){: width="200", height="200"}
+
+<img src="./project/image/sample.jpg" width="200", height="200">
