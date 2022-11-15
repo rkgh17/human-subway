@@ -28,11 +28,11 @@ def saysubway():
     # 데이터 조작 인스턴스 생성
     cur = conn.cursor()
 
-    # db select 오늘날짜의 지하철 이슈 찾아보기
+    # 오늘 날짜 (YYYY-MM-DD 구하기)
     today = date.today().isoformat() + '%'
 
-    # 조회해서 리스트(안에는 튜플)에 담기
-    cur.execute(f"SELECT * FROM subdata2 WHERE acctime LIKE '{today}' ")
+    # DB SELECT
+    cur.execute(f"SELECT * FROM subdata WHERE acctime LIKE '{today}' ")
     result_all = cur.fetchall()
 
     sbstr=""
