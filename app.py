@@ -33,13 +33,14 @@ def saysubway():
     today = date.today().isoformat() + '%'
 
     # DB SELECT
-    cur.execute(f"SELECT * FROM subdata WHERE acctime LIKE '{today}' ")
+    cur.execute(f"SELECT * FROM subdata WHERE acctime LIKE '{today}' order by acctime ASC")
     result_all = cur.fetchall()
 
     sbstr=""
     for i in result_all:
         for j in i:
             sbstr = sbstr + j + "\n"
+        sbstr = sbstr + "\n"
 
     responseBody = {
         "version": "2.0",
