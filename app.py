@@ -41,6 +41,7 @@ def saysubway():
         for j in i:
             sbstr = sbstr + j + "\n"
         sbstr = sbstr + "\n"
+    sbstr = sbstr[:-2]
 
     if(sbstr==""):
         sbstr = "오늘은 지하철 속보가 없습니다"
