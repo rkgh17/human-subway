@@ -113,7 +113,7 @@ def sayHello():
             "outputs": [
                 {
                     "simpleText": {
-                        "text": "안녕 hello I'm Ryan"
+                        "text": "안녕하세요, 지하철 이슈 알림이입니다."
                     }
                 }
             ]
