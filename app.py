@@ -33,7 +33,7 @@ def saysubway():
     today = date.today().isoformat() + '%'
 
     # DB SELECT
-    cur.execute(f"SELECT * FROM subdata WHERE acctime LIKE '{today}' order by acctime ASC")
+    cur.execute(f"SELECT * FROM subaccdata WHERE acctime LIKE '{today}' order by acctime ASC")
     result_all = cur.fetchall()
 
     sbstr=""
@@ -41,6 +41,9 @@ def saysubway():
         for j in i:
             sbstr = sbstr + j + "\n"
         sbstr = sbstr + "\n"
+
+    if(sbstr==""):
+        sbstr = "오늘은 지하철 속보가 없습니다"
 
     responseBody = {
         "version": "2.0",
