@@ -75,7 +75,7 @@ def location(searching):
 def goto():
     body = request.get_json()
     print(body)
-    params_df = (body['action']['params'])['#goal.search_result']
+    params_df = (body['action']['params'])['#search_what.search_result']
     print(type(params_df))
 
     answer_text = str(location(params_df))
