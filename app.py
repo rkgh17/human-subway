@@ -75,10 +75,10 @@ def location(searching):
 def goto():
     body = request.get_json()
     print(body)
-    params_df = (body['action']['params'])['#search_what.search_result']
-    print(type(params_df))
+    #params_df = (body['action']['params'])
+    #print(type(params_df))
 
-    answer_text = str(location(params_df))
+    #answer_text = str(location(params_df))
 
     responseBody = {
         "version": "2.0",
@@ -86,7 +86,7 @@ def goto():
             "outputs": [
                 {
                     "simpleText": {
-                        "text": answer_text
+                        "text": "제발" #answer_text
                     }
                 }
             ]
