@@ -75,10 +75,10 @@ def location(searching):
 def goto():
     body = request.get_json()
     print(body)
-    param = body['contexts'][-1]['params']['search_what']['value']
-    print(type(param))
+    params_df = (body['action']['params'])['#goal.search_result']
+    print(type(params_df))
 
-    answer_text = str(location(param))
+    answer_text = str(location(params_df))
 
     responseBody = {
         "version": "2.0",
