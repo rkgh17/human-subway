@@ -107,13 +107,19 @@ def kakaotalk():
 
             # 카카오 자동 로그인
             myid = driver.find_elements(By.XPATH, '//*[@id="input-loginKey"]')[0]
-            myid.send_keys('rkgh17@daum.net')
+
+            # 아래의 문자열에 각자 카카오톡의 id입력
+            myid.send_keys('')
             time.sleep(0.5)
             mypd = driver.find_elements(By.XPATH, '//*[@id="input-password"]')[0]
-            mypd.send_keys('passwordkk17@')
+
+            # 아래의 문자열에 각자 카카오톡의 비밀번호입력
+            mypd.send_keys('')
             time.sleep(0.5)
             driver.find_elements(By.XPATH, '//*[@id="mainContent"]/div/div/form/div[4]/button[1]')[0].click()
-            # 여기서 2단계 인증인증이나 로봇이 아닙니다필요......
+
+
+            # 여기서 2단계 인증인증이나 로봇이 아닙니다필요...... -> 카카오톡이 22년7월부터 자동화된 로그인을 막았음
             time.sleep(30)
             
             authorize_code = driver.current_url[31:]
