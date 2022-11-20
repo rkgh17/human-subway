@@ -10,7 +10,6 @@ import sys
 
 def kakaotalk():
     now = time
-
     print(print("time log :", now.strftime('%Y-%m-%d %H:%M:%S')))
 
     # 오늘의 지하철 속보 검색
