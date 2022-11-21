@@ -123,6 +123,9 @@ def newslist():
         newsstr = newsstr + '\n'
     newsstr = newsstr[:-2]
 
+    if newsstr == "":
+        newsstr = "검색 결과가 없습니다.\n처음으로 돌아갑니다."
+
     responseBody = {
         "version": "2.0",
         "template": {
