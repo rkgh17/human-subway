@@ -60,7 +60,7 @@ def saysubway():
     }
     return responseBody
 
-# 경로 url 변환 함수
+# 목적지 변환 함수
 def location(searching):
     url = 'https://dapi.kakao.com/v2/local/search/keyword.json?query={}'.format(searching)
     headers = {
