@@ -64,7 +64,7 @@ def saysubway():
 def location(searching):
     url = 'https://dapi.kakao.com/v2/local/search/keyword.json?query={}'.format(searching)
     headers = {
-        "Authorization": "KakaoAK bbc0593ca1fbd88db71ccfdd5421ef1e"
+        "Authorization": "KakaoAK {REST API KEY 입력란}"
     }
     destination = 'https://map.kakao.com/link/to/' + (requests.get(url, headers = headers).json()['documents'])[0].get('id')
     
